@@ -12,16 +12,15 @@ import Timer from "./Timer";
 import { Button } from "@mui/material";
 
 const columns = [
-  { id: "firstName", label: "Name", minWidth: 130 },
-  { id: "lastName", label: "Surname", minWidth: 130 },
-
+  { id: "firstName", label: "Ime", minWidth: 130 },
+  { id: "lastName", label: "Prezime", minWidth: 130 },
   {
-    id: "birthDate",
-    label: "Birth",
-    minWidth: 100,
+    id: "driverNumber",
+    label: "Broj vozača",
+    minWidth: 50,
   },
-
-  { id: "team", label: "Team", minWidth: 100 },
+  { id: "motor", label: "Motor", minWidth: 100 },
+  { id: "team", label: "Tim", minWidth: 100 },
 ];
 
 export default function DriversTable() {
@@ -34,7 +33,7 @@ export default function DriversTable() {
   return (
     <>
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 600 }}>
+        <TableContainer sx={{ maxHeight: 700 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -54,10 +53,10 @@ export default function DriversTable() {
                   </TableCell>
                 ))}
                 <TableCell key="qual" align="left" style={{ minWidth: 100 }}>
-                  Qualification
+                  Kvalifikacije
                 </TableCell>
                 <TableCell key="final" align="left" style={{ minWidth: 100 }}>
-                  Final
+                  Finale
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -91,7 +90,7 @@ export default function DriversTable() {
                     <TableCell key="final">
                       <Timer key={row.id} />
                     </TableCell>
-                    <TableCell>
+                    <TableCell key="button">
                       <Button onClick={() => handleDelete(row.id)}>
                         Delete
                       </Button>

@@ -1,3 +1,5 @@
 .MuiTableRow-root .MuiTableCell-root {
   font-size: 16px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }

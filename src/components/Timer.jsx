@@ -1,11 +1,14 @@
 import { Button } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 const Timer = ({ isAllTimersOn }) => {
   const [duration, setDuration] = useState(0);
   const [timerOn, setTimerOn] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+  const timerIntervalRef = useRef();
+
   useEffect(() => {
-    let timerInterval;
+    let timerInterval = timerIntervalRef.current;
 
     if (timerOn) {
       timerInterval = setInterval(() => {
@@ -27,8 +30,9 @@ const Timer = ({ isAllTimersOn }) => {
   };
 
   const resetTimer = () => {
-    setDuration(0);
+    // setDuration(timerIntervalRef.current);
     setTimerOn(false);
+    setDisabled(true);
   };
 
   // Helper function to format time as minutes, seconds, and milliseconds
@@ -48,11 +52,18 @@ const Timer = ({ isAllTimersOn }) => {
         onClick={() => (!timerOn ? startTimer() : stopTimer())}
         color={!timerOn ? "success" : "error"}
         variant="contained"
+        style={{ marginRight: "10px" }}
+        disabled={disabled}
       >
         {!timerOn ? "Start" : "Stop"}
       </Button>
-      <Button onClick={resetTimer} color="primary" variant="contained">
-        Reset
+      <Button
+        onClick={resetTimer}
+        color="primary"
+        variant="contained"
+        disabled={disabled}
+      >
+        Finish
       </Button>
     </div>
   );

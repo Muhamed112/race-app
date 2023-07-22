@@ -20,10 +20,8 @@ const DriversForm = () => {
     country: "",
     firstName: "",
     lastName: "",
-    gender: "",
-    birthDate: "",
-    phoneNumber: "",
-    email: "",
+    driverNumber: "",
+    motor: "",
     team: "",
   });
   const { setDrivers } = useDrivers("drivers", []);
@@ -75,7 +73,7 @@ const DriversForm = () => {
       <CountrySelect onCountryChange={handleCountryChange} />
       <TextField
         required
-        label="First Name"
+        label="Ime"
         name="firstName"
         value={formData.firstName}
         onChange={handleChange}
@@ -83,7 +81,7 @@ const DriversForm = () => {
       />
       <TextField
         required
-        label="Last Name"
+        label="Prezime"
         name="lastName"
         value={formData.lastName}
         onChange={handleChange}
@@ -92,19 +90,24 @@ const DriversForm = () => {
 
       <TextField
         required
-        label="Birth Date"
-        name="birthDate"
-        type="date"
-        InputLabelProps={{
-          shrink: true,
-        }}
-        value={formData.birthDate}
+        label="Broj vozaca"
+        name="driverNumber"
+        value={formData.driverNumber}
         onChange={handleChange}
         style={{ width: "100%", marginBottom: "15px" }}
       />
 
       <TextField
-        label="Team"
+        required
+        label="Motor"
+        name="motor"
+        value={formData.motor}
+        onChange={handleChange}
+        style={{ width: "100%", marginBottom: "15px" }}
+      />
+
+      <TextField
+        label="Tim"
         name="team"
         value={formData.team}
         onChange={handleChange}
@@ -116,7 +119,7 @@ const DriversForm = () => {
         color="primary"
         style={{ width: "100%", height: "50px" }}
       >
-        Submit
+        Dodaj vozaca
       </Button>
     </form>
   );
