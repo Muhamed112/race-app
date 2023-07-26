@@ -1,18 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  TextField,
-  Button,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-} from "@mui/material";
+import { TextField, Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import useDrivers from "@/hooks/useDrivers";
 import CountrySelect from "./CountryDropdown";
-import { v4 as uuidv4 } from "uuid"; // Import uuidv4 to generate unique ids
+import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
 
 const DriversForm = () => {
@@ -45,7 +38,11 @@ const DriversForm = () => {
     e.preventDefault();
     const newDriver = {
       ...formData,
-      id: uuidv4(), // Generate a unique id and include it in the new driver object
+      id: uuidv4(),
+      qualTime: 0,
+      isQualFinished: false,
+      finalTime: 0,
+      isFinalFinished: false, // Generate a unique id and include it in the new driver object
     };
     setDrivers((prevDrivers) => [...prevDrivers, newDriver]);
     router.push("/");
@@ -69,6 +66,7 @@ const DriversForm = () => {
         style={{
           marginBottom: "30px",
         }}
+        alt="logo"
       />
       <CountrySelect onCountryChange={handleCountryChange} />
       <TextField

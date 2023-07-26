@@ -1,8 +1,6 @@
 import DriversTable from "@/components/DriversTable";
-import Link from "next/link";
-import { Button } from "@mui/material";
-import MultipleTimers from "@/components/Test";
 import Image from "next/image";
+import HeaderButtons from "@/components/HeaderButtons";
 
 export default function Home() {
   return (
@@ -16,11 +14,8 @@ export default function Home() {
           marginBottom: "50px",
         }}
       >
-        <Image src="/logo.jpg" width={100} height={100} />
-
-        <Link href="form">
-          <Button>Register</Button>
-        </Link>
+        <Image src="/logo.jpg" width={100} height={100} alt="logo" />
+        <HeaderButtons />
       </div>
       <DriversTable />
     </div>

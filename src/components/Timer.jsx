@@ -1,25 +1,57 @@
 import { Button } from "@mui/material";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
-const Timer = ({ isAllTimersOn }) => {
+const Timer = ({
+  driverId,
+  isFinished,
+  setDrivers,
+  finishedTime,
+  areQualsFinished,
+  onFinish,
+}) => {
   const [duration, setDuration] = useState(0);
   const [timerOn, setTimerOn] = useState(false);
-  const [disabled, setDisabled] = useState(false);
-  const timerIntervalRef = useRef();
 
   useEffect(() => {
-    let timerInterval = timerIntervalRef.current;
+    const storedDuration = localStorage.getItem(`duration_${driverId}`);
+
+    if (storedDuration) {
+      setDuration(parseInt(storedDuration, 10));
+    }
+  }, [driverId]);
+
+  useEffect(() => {
+    let timerInterval;
 
     if (timerOn) {
       timerInterval = setInterval(() => {
-        setDuration((prevDuration) => prevDuration + 10); // Update every 10 milliseconds
+        setDrivers((prevDrivers) => {
+          return prevDrivers.map((driver) => {
+            if (driver.id === driverId) {
+              return {
+                ...driver,
+                qualTime: areQualsFinished
+                  ? driver.qualTime
+                  : driver.qualTime + 10,
+                finalTime: areQualsFinished
+                  ? driver.finalTime + 10
+                  : driver.finalTime,
+              };
+            }
+            return driver;
+          });
+        });
       }, 10);
     } else {
       clearInterval(clearInterval(timerInterval));
     }
 
     return () => clearInterval(timerInterval); // Cleanup on unmount
-  }, [timerOn]);
+  }, [timerOn, driverId, areQualsFinished]);
+
+  useEffect(() => {
+    localStorage.setItem(`duration_${driverId}`, duration?.toString());
+  }, [driverId, duration]);
 
   const startTimer = () => {
     setTimerOn(true);
@@ -30,9 +62,8 @@ const Timer = ({ isAllTimersOn }) => {
   };
 
   const resetTimer = () => {
-    // setDuration(timerIntervalRef.current);
     setTimerOn(false);
-    setDisabled(true);
+    onFinish();
   };
 
   // Helper function to format time as minutes, seconds, and milliseconds
@@ -47,13 +78,15 @@ const Timer = ({ isAllTimersOn }) => {
 
   return (
     <div>
-      <div>{formatTime(duration)}</div>
+      <div>{formatTime(finishedTime)}</div>
       <Button
         onClick={() => (!timerOn ? startTimer() : stopTimer())}
         color={!timerOn ? "success" : "error"}
         variant="contained"
         style={{ marginRight: "10px" }}
-        disabled={disabled}
+        disabled={
+          (areQualsFinished !== undefined && !areQualsFinished) || isFinished
+        }
       >
         {!timerOn ? "Start" : "Stop"}
       </Button>
@@ -61,7 +94,9 @@ const Timer = ({ isAllTimersOn }) => {
         onClick={resetTimer}
         color="primary"
         variant="contained"
-        disabled={disabled}
+        disabled={
+          (areQualsFinished !== undefined && !areQualsFinished) || isFinished
+        }
       >
         Finish
       </Button>
