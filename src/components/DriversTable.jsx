@@ -88,7 +88,7 @@ export default function DriversTable() {
                       <img
                         loading="lazy"
                         width="40"
-                        src={`https://flagcdn.com/w20/${row.country?.toLowerCase()}.png`}
+                        src={`https://flagcdn.com/w40/${row.country?.toLowerCase()}.png`}
                         srcSet={`https://flagcdn.com/w40/${row.country?.toLowerCase()}.png 2x`}
                         alt=""
                       />
