@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const { parsed: env } = require("dotenv").config();
 
-module.exports = nextConfig
+const nextConfig = {
+  env: {
+    EMAIL: env.EMAIL,
+    PASSWORD: env.PASSWORD,
+  },
+};
+
+module.exports = nextConfig;
