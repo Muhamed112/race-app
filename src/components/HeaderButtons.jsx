@@ -9,13 +9,9 @@ const HeaderButtons = () => {
       <Link href="form">
         <Button>Register</Button>
       </Link>
-      <Button
-        onClick={() => {
-          window.print();
-        }}
-      >
-        Print
-      </Button>
+      <Link href="final">
+        <Button>Final</Button>
+      </Link>
     </div>
   );
 };
