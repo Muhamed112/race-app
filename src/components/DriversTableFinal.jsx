@@ -8,8 +8,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import useDrivers from "@/hooks/useDrivers";
-import Timer from "./Timer";
-import DeleteIcon from "@mui/icons-material/Delete";
+import TableSortLabel from "@mui/material/TableSortLabel";
 import { formatTime } from "@/util/helpers";
 
 const columns = [
@@ -25,25 +24,54 @@ const columns = [
 ];
 
 export default function DriversTableFinal() {
-  const { drivers } = useDrivers("drivers", []);
-  const [areQualsFinished, setAreQualsFinished] = React.useState(false);
+  const { drivers, setDrivers } = useDrivers("drivers", []);
+  const [orderBy, setOrderBy] = React.useState(""); // Initialize with the column ID you want to sort initially
+  const [order, setOrder] = React.useState("asc"); // Initial sorting direction
+  console.log(orderBy, order);
+  // Handler function for changing sorting
+  const handleRequestSort = (property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+  // A helper function for stable sorting
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  // A helper function to get a comparator function based on property and order
+  function getComparator(order, orderBy) {
+    return (a, b) => {
+      console.log("Comparing:", a[orderBy], b[orderBy]);
+
+      if (a[orderBy] < b[orderBy]) {
+        return order === "asc" ? -1 : 1;
+      }
+      if (a[orderBy] > b[orderBy]) {
+        return order === "asc" ? 1 : -1;
+      }
+      return 0;
+    };
+  }
 
   React.useEffect(() => {
-    const allFinished = drivers.every((driver) => driver.isQualFinished);
-    setAreQualsFinished(allFinished);
-  }, [JSON.stringify(drivers), areQualsFinished]);
+    setDrivers((prevDrivers) => {
+      return prevDrivers.map((driver) => {
+        return {
+          ...driver,
+          totalTime: driver.qualTime + driver.finalTime,
+        };
+      });
+    });
+  }, []);
 
-  // Helper function to get the sorting key based on areQualsFinished
-  const getSortingKey = (driver) => {
-    return areQualsFinished ? driver.finalTime : driver.qualTime;
-  };
-
-  // Update drivers.map() to sort the drivers based on the sorting key
-  const sortedDrivers = drivers.sort((a, b) => {
-    const keyA = getSortingKey(a);
-    const keyB = getSortingKey(b);
-    return keyA - keyB;
-  });
+  const sortedDrivers = stableSort(drivers, getComparator(order, orderBy)); // You need to implement the 'stableSort' and 'getComparator' functions
 
   return (
     <>
@@ -68,13 +96,31 @@ export default function DriversTableFinal() {
                   </TableCell>
                 ))}
                 <TableCell key="qual" align="left" style={{ minWidth: 100 }}>
-                  Kvalifikacije
+                  <TableSortLabel
+                    active={orderBy === "qualTime"}
+                    direction={orderBy === "qualTime" ? order : "asc"}
+                    onClick={() => handleRequestSort("qualTime")}
+                  >
+                    Kvalifikacije
+                  </TableSortLabel>
                 </TableCell>
                 <TableCell key="final" align="left" style={{ minWidth: 100 }}>
-                  Finale
+                  <TableSortLabel
+                    active={orderBy === "finalTime"}
+                    direction={orderBy === "finalTime" ? order : "asc"}
+                    onClick={() => handleRequestSort("finalTime")}
+                  >
+                    Finale
+                  </TableSortLabel>
                 </TableCell>
-                <TableCell key="ukupno" align="left" style={{ minWidth: 100 }}>
-                  Ukupno
+                <TableCell key="total" align="left" style={{ minWidth: 100 }}>
+                  <TableSortLabel
+                    active={orderBy === "totalTime"}
+                    direction={orderBy === "totalTime" ? order : "asc"}
+                    onClick={() => handleRequestSort("totalTime")}
+                  >
+                    Ukupno
+                  </TableSortLabel>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -106,8 +152,8 @@ export default function DriversTableFinal() {
                     <TableCell key="final">
                       {formatTime(row.finalTime)}
                     </TableCell>
-                    <TableCell key="ukupno">
-                      {formatTime(row.qualTime + row.finalTime)}
+                    <TableCell key="total">
+                      {formatTime(row.totalTime)}
                     </TableCell>
                   </TableRow>
                 );

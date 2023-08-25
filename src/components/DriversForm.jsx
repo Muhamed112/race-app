@@ -42,7 +42,8 @@ const DriversForm = () => {
       qualTime: 0,
       isQualFinished: false,
       finalTime: 0,
-      isFinalFinished: false, // Generate a unique id and include it in the new driver object
+      isFinalFinished: false,
+      totalTime: 0, // Generate a unique id and include it in the new driver object
     };
     setDrivers((prevDrivers) => [...prevDrivers, newDriver]);
     router.push("/dashboard");
