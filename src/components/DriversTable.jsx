@@ -42,7 +42,7 @@ export default function DriversTable() {
   };
 
   // Update drivers.map() to sort the drivers based on the sorting key
-  const sortedDrivers = drivers.slice().sort((a, b) => {
+  const sortedDrivers = drivers.sort((a, b) => {
     const keyA = getSortingKey(a);
     const keyB = getSortingKey(b);
     return keyA - keyB;
