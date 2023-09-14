@@ -10,16 +10,7 @@ const Timer = ({
   areQualsFinished,
   onFinish,
 }) => {
-  const [duration, setDuration] = useState(0);
   const [timerOn, setTimerOn] = useState(false);
-
-  useEffect(() => {
-    const storedDuration = localStorage.getItem(`duration_${driverId}`);
-
-    if (storedDuration) {
-      setDuration(parseInt(storedDuration, 10));
-    }
-  }, [driverId]);
 
   useEffect(() => {
     let timerInterval;
@@ -49,10 +40,6 @@ const Timer = ({
 
     return () => clearInterval(timerInterval); // Cleanup on unmount
   }, [timerOn, driverId, areQualsFinished]);
-
-  useEffect(() => {
-    localStorage.setItem(`duration_${driverId}`, duration?.toString());
-  }, [driverId, duration]);
 
   const startTimer = () => {
     setTimerOn(true);
